@@ -19,17 +19,17 @@ int main(void) {
     BCSCTL2 |= XCAP_3; // 12.5pF load cap setting
 
     P1SEL = 0; // set to be I/O
-    //P2SEL = 0;
+    P2SEL = 0;
     P3SEL = 0;
     P1DIR = 0xF; // set to be outputs
-    //P2DIR = 0xF;
+    P2DIR = 0xF;
     P3DIR = 0xF;
 
     // set up I/O to drive pendulum.
     //P1DIR = BIT3 | BIT5;                  // Set P1.3 , P1.5 to output direction
     P1OUT = 0;
     CCTL0 = CCIE;                             // CCR0 interrupt enabled
-    CCTL1 = CCIE;
+    //CCTL1 = CCIE; // no second interrupt for now
 
     // Timer-A control
     // TACTL = TASSEL_1 + MC_1 + ID_3;           // ACLK ( TASSEL_1 ) /8 ( ID_3 ), up mode ( MC_1 )
@@ -65,8 +65,8 @@ __interrupt void Timer_A (void)
     // for a simple test have a counter loop 0..5
     // counter = (counter + 1) % 6 ;
 
-    P1OUT ^= BIT3;                          // Toggle P1.
-    P1DIR = BIT0 | BIT1 | BIT2 | BIT4 | BIT6 | BIT7; // BIT3 , BIT5 as inputs ( high Z ), reset as outputs
+    P2OUT ^= BIT0;                          // Toggle P0.
+    P2DIR =  BIT2 | BIT3 | BIT4 | BIT5 | BIT6 | BIT7; // BIT3 , BIT5 as inputs ( high Z ), reset as outputs
     //P1DIR = 0;
 }
 
