@@ -39,12 +39,16 @@ int main(void) {
     // with DIVA_1 , ID_0
     // frequency = 32k ( ACLK ) / 10922 CCR0 , /2 = rise/fall =  1.5001 Hz
 
+    // set CCR0 to get correct period
     CCR0 =  10922;
+
+    // Set CCR1 to get a big enough phase shift between
     //CCR1 = 9000;
-    //CCR1 = 9830; // 0.9 of period.
+    // CCR1 = 9284; // 0.85 of period
+    CCR1 = 9830; // 0.9 of period.
     //CCR1 = 10376; // 0.95 of period
     //CCR1 = 10103; // 0.925 of period
-    CCR1 = 9966; // 0.9125 of period
+    // CCR1 = 9966; // 0.9125 of period
 
     CCTL0 = CCIE;                   // CCR0 interrupt enabled
     CCTL1 = CCIE;                  //  CCR1 interrupt enabled
