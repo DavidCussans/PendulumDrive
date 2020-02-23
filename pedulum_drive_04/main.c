@@ -3,10 +3,12 @@
  *
  *  Created on: 8 Feb 2017
  *      Author: kimvw
+ *
+ *  Modified Feb 2020 , David Cussans. Change to P2.0 , P2.1 to suit custom driver PCB
  */
 #include "msp430g2553.h"
 
-// se volatile to indicate counter might be changed
+// set volatile to indicate counter might be changed
 // by interrupt routine.
 volatile unsigned char outval = 0;
 
@@ -25,8 +27,7 @@ int main(void) {
 
 
     // set up I/O to drive pendulum.
-    //P1DIR = BIT3 | BIT5;                  // Set P1.3 , P1.5 to output direction
-    P2OUT = 0x00;
+    P2OUT = 0x00; // set all P2 ports to zero
 
 
 
@@ -42,7 +43,7 @@ int main(void) {
     // set CCR0 to get correct period
     CCR0 =  10922;
 
-    // Set CCR1 to get a big enough phase shift between
+    // Set CCR1 to get a big enough phase shift between two outputs
     //CCR1 = 9000;
     // CCR1 = 9284; // 0.85 of period
     CCR1 = 9830; // 0.9 of period.
@@ -69,8 +70,7 @@ __interrupt void Timer_A (void)
 
     P2OUT ^= BIT0;                         // Toggle P2.0
     outval = P2OUT;
-    //P2DIR =  BIT0 | BIT1 ; // BIT0 , BIT1 as inputs ( high Z ), reset as outputs
-
+    P2DIR = 0; // set all bits of P2 as inputs
 }
 
 // Timer A1 ISR
@@ -78,13 +78,10 @@ __interrupt void Timer_A (void)
 __interrupt void Timer_A1 (void)
 {
 
-    // for a simple test have a counter loop 0..5
-    // counter = (counter + 1) % 6 ;
-    switch( TAIV )
+   switch( TAIV )
     {
     case 2:
-        //P1DIR = 0xF ; // set all as outputs. Doesn't work for some reason... but does when set BIT3 | BIT5;
-        //P2DIR = BIT0 | BIT1;
+        P2DIR = BIT0 | BIT1; // set bits 0,1 as outputs
         P2OUT ^= (BIT1);                          // Toggle P1.6
 
         break;
