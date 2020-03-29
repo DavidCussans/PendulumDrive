@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP430G2553.ccxml.TI MSP430 USB1/MSP430" value="${build_artifact:pedulum_drive_04}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430G2553.ccxml.TI MSP430 USB1/MSP430" value="pedulum_drive_04"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:pedulum_drive_04}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430G2553.ccxml.TI MSP430 USB1/MSP430" value="C:/Users\phdgc\git\PendulumDrive\pedulum_drive_04\Debug\pedulum_drive_04.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430G2553.ccxml.TI MSP430 USB1/MSP430" value="C:/Users\kimvw\AppData\Roaming\SPB_Data\git\PendulumDrive\PendulumDrive\pedulum_drive_04\Debug\pedulum_drive_04.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/pedulum_drive_04"/>
 </listAttribute>

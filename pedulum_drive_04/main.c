@@ -10,7 +10,11 @@
 
 // set volatile to indicate counter might be changed
 // by interrupt routine.
-volatile unsigned char outval = 0;
+volatile unsigned short counterVal = 0;
+
+const unsigned short cycleLength = 10922 ;  // number of ticks in one cycle
+const unsigned char cycleShim0 = 4; // Add an additional 1 tick delay to cycle every 4 cycles
+const unsigned char cycleShim1 = 14; // add an additional  1 tick delay every 14
 
 int main(void) {
 
@@ -41,12 +45,12 @@ int main(void) {
     // frequency = 32k ( ACLK ) / 10922 CCR0 , /2 = rise/fall =  1.5001 Hz
 
     // set CCR0 to get correct period
-    CCR0 =  10922;
+    CCR0 =  cycleLength;
 
     // Set CCR1 to get a big enough phase shift between two outputs
     //CCR1 = 9000;
     // CCR1 = 9284; // 0.85 of period
-    CCR1 = 9830; // 0.9 of period.
+    CCR1 = cycleLength * 0.9 ; // 0.9 of period.
     //CCR1 = 10376; // 0.95 of period
     //CCR1 = 10103; // 0.925 of period
     // CCR1 = 9966; // 0.9125 of period
@@ -62,6 +66,26 @@ int main(void) {
 }
 
 
+// #pragma CODE_SECTION(cycleLengthFn,".run_from_ram")
+// Pad out cycle length by a fractional amount ( i.e.
+inline unsigned short cycleLengthFn ( void ) {
+
+    unsigned short cycleLengthInt ;
+
+    counterVal = ( counterVal + 1 ) & 0xFFF ; // cycle through 0 - 0xFFF
+
+    cycleLengthInt = cycleLength;
+
+    // -1/4 ,-1/16 , -1/128 ,-1/256 ,-1/512
+    if (( counterVal & 0x0003 ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 4
+    if (( counterVal & 0x000F ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 16
+    if (( counterVal & 0x007F ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 128
+    if (( counterVal & 0x00FF ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 256
+    if (( counterVal & 0x01FF ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 512
+
+    return cycleLengthInt;
+}
+
 // Timer A0 interrupt service routine
 // #pragma vector=TIMERA0_VECTOR
 #pragma vector=TIMER0_A0_VECTOR
@@ -69,8 +93,10 @@ __interrupt void Timer_A (void)
 {
 
     P2OUT ^= BIT0;                         // Toggle P2.0
-    outval = P2OUT;
     P2DIR = 0; // set all bits of P2 as inputs
+
+    // CCR0 = cycleLengthFn();
+    CCR0 =  cycleLengthFn();
 }
 
 // Timer A1 ISR
