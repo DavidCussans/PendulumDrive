@@ -75,13 +75,12 @@ inline unsigned short cycleLengthFn ( void ) {
     counterVal = ( counterVal + 1 ) & 0xFFF ; // cycle through 0 - 0xFFF
 
     cycleLengthInt = cycleLength;
-
-    // -1/4 ,-1/16 , -1/128 ,-1/256 ,-1/512
-    if (( counterVal & 0x0003 ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 4
-    if (( counterVal & 0x000F ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 16
-    if (( counterVal & 0x007F ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 128
-    if (( counterVal & 0x00FF ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 256
-    if (( counterVal & 0x01FF ) == 0 ) { cycleLengthInt =+ 1; } // add one if multiple of 512
+  // -1/4 ,-1/16 , -1/64 ,-1/128 ,-1/1024    
+    if (( counterVal & 0x0003 ) == 0 ) { cycleLengthInt += 1; } // add one if multiple of 4
+    if (( counterVal & 0x000F ) == 1 ) { cycleLengthInt += 1; } // add one if multiple of 16
+    if (( counterVal & 0x003F ) == 2 ) { cycleLengthInt += 1; } // add one if multiple of 64
+    if (( counterVal & 0x007F ) == 3 ) { cycleLengthInt += 1; } // add one if multiple of 128
+    if (( counterVal & 0x03FF ) == 4 ) { cycleLengthInt += 1; } // add one if multiple of 1024
 
     return cycleLengthInt;
 }
